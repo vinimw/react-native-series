@@ -5,13 +5,13 @@ import firebase from 'firebase';
 
 import FormRow from '../components/FormRow';
 
-export default class LoginPage extends React.Component {
+export default class RegisterPage extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			email: 'teste@teste.com',
-			password: '12',
+			password: 'asdasd',
 			isLoading: false,
 		};
 	}
@@ -23,16 +23,11 @@ export default class LoginPage extends React.Component {
 	}
 
 	componentDidMount() {
-		const config = {
-			apiKey: "AIzaSyCI0KNoBJYXdtD-rtQrZikJt836SS6Wfnw",
-			authDomain: "series-202af.firebaseapp.com",
-			databaseURL: "https://series-202af.firebaseio.com",
-			projectId: "series-202af",
-			storageBucket: "series-202af.appspot.com",
-			messagingSenderId: "734559578939"
-		};
-		  
-		firebase.initializeApp(config);
+		
+	}
+
+	onClickToLogin() {
+		this.props.navigation.navigate('Login');
 	}
 
 	tryLogin() {
@@ -41,9 +36,16 @@ export default class LoginPage extends React.Component {
 
 		firebase
 			.auth()
-			.signInWithEmailAndPassword(email, password)
+			.createUserWithEmailAndPassword(email, password)
 			.then(user => {
-				console.log("Yeahh");
+				Alert.alert(
+				  'Success',
+				  "Congratulations, now you're a user, please fill your login and password",
+				  [
+				    {text: 'OK', onPress: () => this.onClickToLogin()},
+				  ],
+				  { cancelable: false }
+				)
 			})
 			.catch(error => {
 				Alert.alert(
@@ -63,13 +65,9 @@ export default class LoginPage extends React.Component {
 			return <ActivityIndicator />
 		return (
 			<View>
-				<Button buttonStyle={styles.login} containerViewStyle={{width: '100%', marginLeft: 0}} color="white" title="LOGIN" onPress={() => this.tryLogin()} />
+				<Button buttonStyle={styles.login} containerViewStyle={{width: '100%', marginLeft: 0}} color="white" title="REGISTER" onPress={() => this.tryLogin()} />
 			</View>
 		);
-	}
-
-	onClickRegister() {
-		this.props.navigation.navigate('Register');
 	}
 
 	render() {
@@ -96,10 +94,6 @@ export default class LoginPage extends React.Component {
 				</FormRow>
 				
 				{ this.renderButton() }
-
-				<View>
-					<Button buttonStyle={styles.register} titleStyle={{ fontSize: 10 }} containerViewStyle={{width: '100%', marginLeft: 0}} color="white" title="NEW USER" onPress={() => this.onClickRegister()} />
-				</View>
 				
 			</View>
 		)
@@ -121,15 +115,6 @@ const styles = StyleSheet.create({
   	backgroundColor: '#000000',
   	margin: 0,
   	padding: 0,
-  },
-  register: {
-  	width: "100%",
-  	marginTop: 10,
-  	padding: 15,
-  	backgroundColor: "#00930e",
-  	borderColor: 'transparent',
-  	borderRadius: 5,
-  	borderWidth: 0,
   },
   login: {
   	width: "100%",

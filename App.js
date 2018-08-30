@@ -1,12 +1,19 @@
 import { createStackNavigator } from 'react-navigation';
 
 import LoginPage from './src/pages/LoginPage';
+import RegisterPage from './src/pages/RegisterPage';
 
 export default createStackNavigator({
     'Login': {
         screen: LoginPage,
         navigationOptions: {
             title: 'Login'
+        }
+    },
+    'Register': {
+        screen: RegisterPage,
+        navigationOptions: {
+            title: 'New user'
         }
     }
 }, {
@@ -20,7 +27,7 @@ export default createStackNavigator({
         },
         headerTitleStyle: {
             color: 'white',
-            fontSize: 30,
+            fontSize: 20,
         }
     }
 });
