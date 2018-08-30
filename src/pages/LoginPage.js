@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { Button } from 'react-native-elements';
+import firebase from 'firebase';
 
 import FormRow from '../components/FormRow';
 
@@ -9,8 +10,9 @@ export default class LoginPage extends React.Component {
 		super(props);
 
 		this.state = {
-			email: '',
-			password: '',
+			email: 'teste@teste.com',
+			password: '12',
+			isLoading: false,
 		};
 	}
 
@@ -20,8 +22,51 @@ export default class LoginPage extends React.Component {
 		});
 	}
 
+	componentDidMount() {
+		const config = {
+			apiKey: "AIzaSyCI0KNoBJYXdtD-rtQrZikJt836SS6Wfnw",
+			authDomain: "series-202af.firebaseapp.com",
+			databaseURL: "https://series-202af.firebaseio.com",
+			projectId: "series-202af",
+			storageBucket: "series-202af.appspot.com",
+			messagingSenderId: "734559578939"
+		};
+		  
+		firebase.initializeApp(config);
+	}
+
 	tryLogin() {
-		console.log(this.state);
+		this.setState({ isLoading: true });
+		const { email, password } = this.state;
+
+		firebase
+			.auth()
+			.signInWithEmailAndPassword(email, password)
+			.then(user => {
+				console.log("Yeahh");
+			})
+			.catch(error => {
+				Alert.alert(
+				  'Error',
+				  error.message,
+				  [
+				    {text: 'OK', onPress: () => console.log('OK Pressed')},
+				  ],
+				  { cancelable: false }
+				)
+				console.log(error);
+			})
+			.then(() => this.setState({ isLoading: false }))
+	}
+
+	renderButton() {
+		if( this.state.isLoading)
+			return <ActivityIndicator />
+		return (
+			<View>
+				<Button buttonStyle={styles.login} containerViewStyle={{width: '100%', marginLeft: 0}} color="white" title="Login" onPress={() => this.tryLogin()} />
+			</View>
+		);
 	}
 
 	render() {
@@ -46,9 +91,9 @@ export default class LoginPage extends React.Component {
 						onChangeText={password => this.onChangeHandler('password', password)}
 					></TextInput>
 				</FormRow>
-				<View>
-					<Button buttonStyle={styles.login} containerViewStyle={{width: '100%', marginLeft: 0}} color="white" title="Login" onPress={() => this.tryLogin()} />
-				</View>
+				
+				{ this.renderButton() }
+				
 			</View>
 		)
 	}
